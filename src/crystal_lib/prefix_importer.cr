@@ -77,6 +77,15 @@ class CrystalLib::PrefixImporter
 
   def process(node : Typedef)
     # We skip these because they should be imported when importing functions
+
+    # VULKAN: Automatically import *FlagBits-Enums because they are not referenced directly
+    case t = node.type
+    when CrystalLib::NodeRef
+      case node = t.node
+      when CrystalLib::Enum
+        @mapper.map(node)
+      end
+    end
   end
 
   def process(node)
